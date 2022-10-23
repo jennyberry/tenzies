@@ -1,6 +1,6 @@
 import React from "react";
 import Dice from "./Dice";
-
+import { nanoid } from "nanoid";
 export default function Main(props) {
   function allnewDice() {
     // //ES6 fast way
@@ -14,13 +14,16 @@ export default function Main(props) {
       newDice.push({
         value: Math.ceil(Math.random() * 6),
         isHeld: false,
+        id: nanoid(),
       });
     }
     return newDice;
   }
 
   const [diceArr, setDiceArr] = React.useState(allnewDice());
-  const diceElement = diceArr.map((dice) => <Dice value={dice.value} />);
+  const diceElement = diceArr.map((dice) => (
+    <Dice value={dice.value} key={dice.id} isHeld={dice.isHeld} />
+  ));
   function rollDice() {
     setDiceArr(allnewDice());
   }
