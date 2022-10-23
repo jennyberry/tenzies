@@ -1,8 +1,18 @@
 import React from "react";
 import Dice from "./Dice";
+import Confetti from "react-confetti";
 import { nanoid } from "nanoid"; // dependency to generate unique id
 export default function Main(props) {
   const [diceArr, setDiceArr] = React.useState(allnewDice());
+  const [tenzies, setTenzies] = React.useState(false);
+  React.useEffect(() => {
+    const allHeld = diceArr.every((dice) => dice.isHeld);
+    const allSame = diceArr.every((dice) => dice.value === diceArr[0].value);
+    if (allHeld && allSame) {
+      setTenzies(true);
+    }
+  }, [diceArr]);
+
   function generateNewDice() {
     return {
       value: Math.ceil(Math.random() * 6),
@@ -51,6 +61,8 @@ export default function Main(props) {
   ));
   return (
     <main className={props.darkMode ? "dark" : ""}>
+      {tenzies ? <Confetti /> : ""}
+
       <h1>Tenzies</h1>
       <p>
         Roll until all dice are the same. Click each die to freeze it at its
@@ -58,7 +70,7 @@ export default function Main(props) {
       </p>
       <div className="die-container">{diceElement}</div>
       <button className="roll-btn" onClick={rollDice}>
-        Roll
+        {tenzies ? "New Game" : "Roll"}
       </button>
     </main>
   );
