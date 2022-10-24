@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import Dice from "./Dice";
 import Confetti from "react-confetti";
 import { nanoid } from "nanoid"; // dependency to generate unique id
 export default function Main(props) {
   const [diceArr, setDiceArr] = React.useState(allnewDice());
   const [tenzies, setTenzies] = React.useState(false);
+  const [count, setCount] = React.useState(0);
+  const [startGame, setStartGame] = React.useState(false);
+
+  //check if player win
   React.useEffect(() => {
     const allHeld = diceArr.every((dice) => dice.isHeld);
     const allSame = diceArr.every((dice) => dice.value === diceArr[0].value);
@@ -12,7 +16,10 @@ export default function Main(props) {
       setTenzies(true);
     }
   }, [diceArr]);
-
+  //func to start game
+  function begin() {
+    setStartGame(true);
+  }
   function generateNewDice() {
     return {
       value: Math.ceil(Math.random() * 6),
@@ -35,11 +42,19 @@ export default function Main(props) {
 
   //func to get new array when click Roll button
   function rollDice() {
-    setDiceArr((oldDie) =>
-      oldDie.map((dice) => {
-        return dice.isHeld ? dice : generateNewDice();
-      })
-    );
+    if (!tenzies) {
+      setDiceArr((oldDie) =>
+        oldDie.map((dice) => {
+          return dice.isHeld ? dice : generateNewDice();
+        })
+      );
+      setCount((oldRoll) => oldRoll + 1);
+    } else {
+      // reset game
+      setTenzies(false);
+      setDiceArr(allnewDice());
+      setCount(0);
+    }
   }
   //func to get dice's id when click each dice
   function holdDice(id) {
@@ -59,19 +74,54 @@ export default function Main(props) {
       holdDice={() => holdDice(dice.id)}
     />
   ));
+  //display inital message
+  const render = () => {
+    if (!tenzies) {
+      if (!startGame) {
+        return (
+          <div className="die-container-start">
+            <button className="roll-btn-start" onClick={begin}>
+              Start game
+            </button>
+          </div>
+        );
+      } else {
+        return <div className="die-container">{diceElement}</div>;
+      }
+    }
+  };
   return (
     <main className={props.darkMode ? "dark" : ""}>
-      {tenzies ? <Confetti /> : ""}
+      {tenzies && <Confetti />}
 
       <h1>Tenzies</h1>
       <p>
         Roll until all dice are the same. Click each die to freeze it at its
         current value between rolls.
       </p>
-      <div className="die-container">{diceElement}</div>
-      <button className="roll-btn" onClick={rollDice}>
-        {tenzies ? "New Game" : "Roll"}
-      </button>
+      {render()}
+      {!startGame && !tenzies ? (
+        ""
+      ) : (
+        <button
+          className="roll-btn"
+          onClick={() => {
+            rollDice();
+            //   countRoll();
+          }}
+        >
+          {tenzies ? "New Game" : "Roll"}
+        </button>
+      )}
+
+      <div className="bottom-group">
+        <p className="countRoll">
+          Time <span className="countTime">0:00</span>
+        </p>
+        <p className="countRoll">
+          Best rolls: <b>{count}</b>
+        </p>
+      </div>
     </main>
   );
 }

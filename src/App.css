@@ -3,6 +3,12 @@
   font-family: 'Karla', sans-serif;
 
 }
+@font-face {
+  font-family: 'Cursed Timer ULiL';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Cursed Timer ULiL'), url('https://fonts.cdnfonts.com/s/40642/CursedTimerUlil-Aznm.woff') format('woff');
+}
 section{
   display: flexbox;
   margin: 50px;
@@ -11,6 +17,8 @@ section{
   color: black;
   border-radius: 10px;
  justify-items: center;
+ width: 800px;
+ margin: 5rem auto;
 }
 section.dark{
   background-color: #2B283A;
@@ -111,6 +119,9 @@ h2{
     margin: 20px 20px;
     justify-items: center;
 }
+.die-container-start{
+margin: 50px 0;
+}
 .roll-btn{
   font-family: inherit;
   font-size: 1.5rem;
@@ -121,6 +132,21 @@ h2{
   padding: 10px 40px;
   border-radius: 10px;
   margin-bottom: 30px;
+  cursor: pointer;
+}
+.roll-btn-start{
+
+    font-family: inherit;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: black;
+    background-color: #59E391;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    cursor: pointer;
+width: 200px;
 }
 .dice{
   display: flex;
@@ -132,5 +158,22 @@ justify-content: center;
 align-items: center;
 cursor: pointer;
 }
-
-
+.dice-selected{
+  background-color: #59E391;
+}
+.bottom-group{
+  display: flex;
+  justify-content: space-between;
+  padding: 0 5.5rem 10px 5.5rem;
+}
+.countTime{
+  font-family: "Cursed Timer ULiL";
+  font-size: 1.2rem;
+}
+.countRoll{
+  font-size: 1.2rem;
+  border: 2px solid #59E391;
+  border-radius: 9px;
+  padding: 5px;
+  font-weight: 500;
+}
