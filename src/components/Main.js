@@ -7,6 +7,7 @@ export default function Main(props) {
   const [tenzies, setTenzies] = React.useState(false);
   const [count, setCount] = React.useState(0);
   const [startGame, setStartGame] = React.useState(false);
+  const [timeWatch, setTimeWatch] = React.useState(0);
 
   //check if player win
   React.useEffect(() => {
@@ -14,8 +15,29 @@ export default function Main(props) {
     const allSame = diceArr.every((dice) => dice.value === diceArr[0].value);
     if (allHeld && allSame) {
       setTenzies(true);
+      setTimeWatch(0);
     }
   }, [diceArr]);
+
+  //set time watch when start game
+  React.useEffect(() => {
+    let timer;
+    if (startGame) {
+      timer = setInterval(() => {
+        setTimeWatch((timeWatch) => timeWatch + 1);
+      }, 1000);
+    }
+    return () => clearInterval(timer);
+  }, [startGame]);
+
+  //get second for time watch
+  function convertToTimeFormat(num) {
+    let time = new Date(0);
+    time.setSeconds(num);
+    let timeString = time.toISOString().substring(14, 19);
+    return timeString;
+  }
+
   //func to start game
   function begin() {
     setStartGame(true);
@@ -74,7 +96,7 @@ export default function Main(props) {
       holdDice={() => holdDice(dice.id)}
     />
   ));
-  //display inital message
+  //display inital message before start game
   const render = () => {
     if (!tenzies) {
       if (!startGame) {
@@ -107,7 +129,6 @@ export default function Main(props) {
           className="roll-btn"
           onClick={() => {
             rollDice();
-            //   countRoll();
           }}
         >
           {tenzies ? "New Game" : "Roll"}
@@ -116,7 +137,12 @@ export default function Main(props) {
 
       <div className="bottom-group">
         <p className="countRoll">
-          Time <span className="countTime">0:00</span>
+          Time
+          {tenzies ? (
+            <span className="countTime">00:00</span>
+          ) : (
+            <span className="countTime">{convertToTimeFormat(timeWatch)}</span>
+          )}
         </p>
         <p className="countRoll">
           Best rolls: <b>{count}</b>
